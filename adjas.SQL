@@ -31,28 +31,35 @@ create table casaCostruttrice(
 create table partenza(
     #volo integer primary key,
     nomeAeroporto varchar(10),
-    foreign key (nomeAeroporto) references aeroporto(nome)
+    foreign key (nomeAeroporto) references aeroporto(nome),
+    foreign key (#volo) references volo(#volo)
 );
 
 create table arrivo(
     #volo integer primary key,
     nomeAeroporto varchar(10),
-    foreign key (nomeAeroporto) references aeroporto(nome)
+    foreign key (nomeAeroporto) references aeroporto(nome),
+    foreign key (#volo) references volo(#volo)
 );
 
 create table utilizza(
     #volo integer primary key,
-    nome varchar(10)
+    nome varchar(10),
+    foreign key (#volo) references volo(#volo),
+    foreign key (nome) references tipoDiAereo(nome)
 );
 
 create table costruisce(
     nome varchar(10),
     tipoDiAereo varchar(10),
-    primary key(nome,tipoDiAereo)
+    primary key(nome,tipoDiAereo),
+    foreign key (nome) references casaCostruttrice(nome),
+    foreign key (tipoDiAereo) references tipoDiAereo(nome)
 );
 
 create table pista(
     #pista integer,
     nomeAeroporto varchar(10),
     primary key(#pista,nomeAeroporto)
+    foreign key (nomeAeroporto) references aeroporto(nome)
 );
