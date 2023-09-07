@@ -1,0 +1,83 @@
+---
+title: "Basi"
+output: html_document
+date: "2023-09-07"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries, echo=FALSE, include=FALSE}
+library(dplyr)
+library(readr)
+library(tidyr)
+library(ggplot2)
+library(plotly)
+library(reshape2)
+#library(ggpubr)
+#library(yaml)
+```
+
+
+```{r voliArrivo}
+arrivo <- read_csv("arrivo.csv")
+colnames(arrivo)[2] ="nome"
+View(arrivo)
+aeroporto <- read.csv("aeroporto.csv")
+View(aeroporto)
+
+
+# GRAFICO CON NOME UTILIZZA
+arrivoAeroporto <- left_join(arrivo, aeroporto, by = "nome")
+arrivoAeroporto <- subset(arrivoAeroporto, select = -c(nome, nazione, numeropiste))
+View(arrivoAeroporto)
+
+plotCitta <- data.frame((table(arrivoAeroporto$citta)))
+View(plotCitta)
+
+graficoCitta <- plotCitta %>%
+    ggplot(aes(reorder(Var1, Freq, fill = Var1, label = Freq), Freq)) +
+    geom_bar(stat = "Identity", show.legend = FALSE, fill = "#5DADE2") + 
+    coord_flip() +
+  labs(y = "Numero di voli in arrivo", x = "Aeroporti")
+    theme(axis.text.x = element_text(face = "bold"),
+          axis.text.y = element_text(face = "bold"))
+          #axis.title.x = element_blank(),
+          #axis.title.y = element_blank()) 
+graficoCitta
+
+# GRAFICO CON CODICE AEROPORTO
+plotArrivo <- data.frame((table(arrivo$nome)))
+View(plotArrivo)
+
+graficoArrivo <- plotArrivo %>%
+    ggplot(aes(reorder(Var1, Freq, fill = Var1, label = Freq), Freq)) +
+    geom_bar(stat = "Identity", show.legend = FALSE, fill = "#5DADE2") + 
+    coord_flip() +
+    labs(y = "Numero di voli in arrivo", x = "Aeroporti")
+    theme(axis.text.x = element_text(face = "bold"),
+          axis.text.y = element_text(face = "bold"))
+          #axis.title.x = element_blank(),
+          #axis.title.y = element_blank()) 
+graficoArrivo
+```
+
+```{r tipiAereo}
+# importo utilizza
+utilizza <- read_csv("utilizza.csv")
+View(utilizza)
+
+plotUtilizza <- data.frame((table(utilizza$nome)))
+View(plotUtilizza)
+
+# GRAFICO TIPI DI AEREO
+graficoUtilizza <- plotUtilizza %>%
+ggplot(aes(x="", y=Freq, fill=Var1)) +
+  geom_bar(stat="identity", width=1, color="white") +
+  coord_polar("y", start=0) +
+  labs(fill = "Tipo di aereo") +
+  theme_void() # remove background, grid, numeric labels
+graficoUtilizza
+```
+
